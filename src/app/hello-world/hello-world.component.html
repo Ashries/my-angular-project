@@ -1,0 +1,14 @@
+<div class="hello-container">
+    <h1>Hello World!</h1>
+    <p>Welcome to my Angular application</p>
+    
+    <button mat-raised-button color="primary" (click)="showMessage()">
+      Click me!
+    </button>
+    
+    <button mat-button color="accent" routerLink="/">
+      Go Home
+    </button>
+    
+    <p *ngIf="message" class="message">{{ message }}</p>
+  </div>
