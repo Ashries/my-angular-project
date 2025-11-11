@@ -1,0 +1,100 @@
+.feedback-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.feedback-card {
+  padding: 20px;
+}
+
+.question-item {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 20px;
+  height: auto !important;
+}
+
+.question-content {
+  width: 100%;
+  padding: 10px 0;
+}
+
+.question-text {
+  margin-bottom: 20px;
+  color: #3f51b5;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.slider-container {
+  margin: 25px 0;
+  width: 100%;
+  padding: 0 10px; /* Add some padding for the slider edges */
+}
+
+/* FIX SLIDER WIDTH TO MATCH LABELS */
+::ng-deep .mat-slider {
+  width: 100% !important;
+}
+
+::ng-deep .mat-slider-wrapper {
+  width: 100% !important;
+}
+
+::ng-deep .mat-slider-track-wrapper {
+  width: calc(100% - 48px) !important; /* Account for thumb space */
+  margin: 0 auto !important;
+}
+
+::ng-deep .mat-slider-track-background {
+  width: 100% !important;
+}
+
+::ng-deep .mat-slider-track-fill {
+  width: 100% !important;
+}
+
+/* Make the slider track span the full width */
+::ng-deep .mat-slider-horizontal {
+  min-width: 100% !important;
+  width: 100% !important;
+}
+
+.feedback-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #666;
+  width: calc(100% - 48px); /* Match slider track width */
+  margin-left: 24px; /* Center with slider */
+  margin-right: 24px;
+}
+
+.feedback-label {
+  flex: 1;
+  text-align: center;
+  padding: 0 5px;
+}
+
+.current-feedback {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 1rem;
+  border-left: 4px solid #3f51b5;
+}
+
+/* Ensure list items don't cut content */
+::ng-deep .mat-list-item {
+  height: auto !important;
+  min-height: 150px;
+}
+
+::ng-deep .mat-list-item-content {
+  padding: 16px 0 !important;
+  height: auto !important;
+}

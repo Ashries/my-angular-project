@@ -1,0 +1,32 @@
+<div class="calculator-container">
+  <mat-card class="calculator-card">
+    <mat-card-header>
+      <mat-card-title>Nelilaskin</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <!-- Näyttö -->
+      <div class="display-container">
+        <mat-card class="display-card">
+          <mat-card-content>
+            <div class="display">{{ display }}</div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Nappulat -->
+      <mat-grid-list cols="4" rowHeight="4:1" gutterSize="8">
+        <mat-grid-tile *ngFor="let button of buttons">
+          <button 
+            mat-raised-button 
+            class="calculator-button"
+            [class.operator]="isOperator(button)"
+            [class.special]="isSpecial(button)"
+            (click)="handleButtonClick(button)">
+            {{ button === '*' ? '×' : button === '/' ? '÷' : button }}
+          </button>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card-content>
+  </mat-card>
+</div>
