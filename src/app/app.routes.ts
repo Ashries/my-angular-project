@@ -6,7 +6,7 @@ import { FeedbackComponent } from './feedback/feedback.component';
 import { FormComponent } from './form/form.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
-export const routes: Routes = [
+export const routes: Routes = [ // ← Make sure it says 'export const routes'
   { path: '', component: HomeComponent },
   { path: 'hello', component: HelloWorldComponent },
   { path: 'calculator', component: CalculatorComponent },

@@ -1,0 +1,19 @@
+.sidebar {
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.nav-link {
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+  transform: translateX(2px);
+}
+
+.sub-nav-link {
+  transition: all 0.2s ease-in-out;
+}
+
+.sub-nav-link:hover {
+  transform: translateX(2px);
+}

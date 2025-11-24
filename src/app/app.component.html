@@ -1,18 +1,26 @@
-<nav class="navbar">
-  <h1>My Angular App</h1>
-  <div class="nav-links">
-    <a routerLink="/" class="nav-link">Etusivu</a>
-    <a routerLink="/hello" class="nav-link">Hello World</a>
-    <a routerLink="/calculator" class="nav-link">Laskin</a>
-    <a routerLink="/feedback" class="nav-link">Palaute</a>
-    <a routerLink="/form" class="nav-link">Lomake</a>
+<div class="app-container">
+  <!-- Keep old navbar temporarily for testing -->
+  <nav class="navbar">
+    <h1>My Angular App</h1>
+    <div class="nav-links">
+      <a routerLink="/" class="nav-link">Etusivu</a>
+      <a routerLink="/hello" class="nav-link">Hello World</a>
+      <a routerLink="/calculator" class="nav-link">Laskin</a>
+      <a routerLink="/feedback" class="nav-link">Palaute</a>
+      <a routerLink="/form" class="nav-link">Lomake</a>
+    </div>
+  </nav>
+
+  <!-- Add sidebar for testing -->
+  <div class="main-layout">
+    <app-sidebar></app-sidebar>
+    <div class="content-area">
+      <main class="main-content">
+        <router-outlet></router-outlet>
+      </main>
+      <footer class="footer">
+        <p>© 2024 Angular Sovellus</p>
+      </footer>
+    </div>
   </div>
-</nav>
-
-<main>
-  <router-outlet></router-outlet>
-</main>
-
-<footer class="footer">
-  <p>© 2024 Angular Sovellus</p>
-</footer>
+</div>

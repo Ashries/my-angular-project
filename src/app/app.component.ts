@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
+import { SidebarComponent } from './sidebar/sidebar.component'; // ← ADD THIS
+import { CommonModule } from '@angular/common'; // ← ADD THIS
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterModule],
+  standalone: true, // ← Make sure this is here if using standalone
+  imports: [RouterOutlet, SidebarComponent, CommonModule], // ← ADD SidebarComponent here
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   title = 'my-angular-project';
