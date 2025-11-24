@@ -1,36 +1,4 @@
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #3f51b5;
-  color: white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.navbar h1 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.nav-links {
-  display: flex;
-  gap: 1rem;
-}
-
-.nav-link {
-  color: white;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-.nav-link:hover {
-  background-color: rgba(255,255,255,0.1);
-}
-
-main {
+.main-content {
   min-height: calc(100vh - 120px);
   padding: 20px;
 }

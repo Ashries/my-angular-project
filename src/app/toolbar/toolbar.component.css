@@ -1,0 +1,40 @@
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.toolbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.app-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.nav-links {
+  display: flex;
+  gap: 8px;
+}
+
+.active-link {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 4px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .toolbar-content {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,24 @@
+<mat-toolbar color="primary" class="toolbar">
+  <div class="toolbar-content">
+    <span class="app-title">My Angular App</span>
+    
+    <div class="nav-links">
+      <a mat-button routerLink="/" routerLinkActive="active-link" 
+         [routerLinkActiveOptions]="{exact: true}">
+        Etusivu
+      </a>
+      <a mat-button routerLink="/hello" routerLinkActive="active-link">
+        Hello World
+      </a>
+      <a mat-button routerLink="/calculator" routerLinkActive="active-link">
+        Laskin
+      </a>
+      <a mat-button routerLink="/feedback" routerLinkActive="active-link">
+        Palaute
+      </a>
+      <a mat-button routerLink="/form" routerLinkActive="active-link">
+        Lomake
+      </a>
+    </div>
+  </div>
+</mat-toolbar>
