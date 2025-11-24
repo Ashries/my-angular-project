@@ -1,0 +1,85 @@
+<div class="form-container">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>Rekisteröityminen</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()" class="form">
+        <!-- Etunimi -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Etunimi</mat-label>
+          <input matInput [(ngModel)]="person.firstName" name="firstName" required>
+          <mat-error *ngIf="person.firstName && !isFirstNameValid()">
+            Vain kirjaimia, vähintään 2 merkkiä
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Sukunimi -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Sukunimi</mat-label>
+          <input matInput [(ngModel)]="person.lastName" name="lastName" required>
+          <mat-error *ngIf="person.lastName && !isLastNameValid()">
+            Vain kirjaimia, vähintään 2 merkkiä
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Sähköposti -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Sähköposti</mat-label>
+          <input matInput [(ngModel)]="person.email" name="email" type="email" required>
+          <mat-error *ngIf="person.email && !isEmailValid()">
+            Syötä kelvollinen sähköpostiosoite
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Käyttäjätunnus -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Käyttäjätunnus</mat-label>
+          <input matInput [(ngModel)]="person.username" name="username" required>
+          <mat-error *ngIf="person.username && !isUsernameValid()">
+            Vähintään 6 merkkiä
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Salasana -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Salasana</mat-label>
+          <input matInput [(ngModel)]="person.password" name="password" type="password" required>
+          <mat-error *ngIf="person.password && !isPasswordValid()">
+            Vähintään 10 merkkiä, sisältää ison kirjaimen ja numeron
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Vahvista salasana -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Vahvista salasana</mat-label>
+          <input matInput [(ngModel)]="person.confirmPassword" name="confirmPassword" type="password" required>
+          <mat-error *ngIf="person.confirmPassword && !isConfirmPasswordValid()">
+            Salasanojen täytyy täsmätä
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Henkilötunnus -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Henkilötunnus</mat-label>
+          <input matInput [(ngModel)]="person.ssn" name="ssn" placeholder="010190-123A" required>
+          <mat-error *ngIf="person.ssn && !isSsnValid()">
+            Syötä kelvollinen henkilötunnus
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Käyttöehdot -->
+        <mat-checkbox [(ngModel)]="person.acceptTerms" name="acceptTerms" required>
+          Hyväksyn käyttöehdot
+        </mat-checkbox>
+
+        <!-- Submit nappi -->
+        <button mat-raised-button color="primary" type="submit" 
+                [disabled]="!isFormValid()" class="submit-button">
+          Rekisteröidy
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
