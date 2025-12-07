@@ -25,7 +25,51 @@ import { CommonModule } from '@angular/common';
 export class SidebarComponent {
   feedbackExpanded = false;
 
+  // Navigation items array
+  navItems = [
+    {
+      title: 'Give Feedback',
+      icon: 'feedback',
+      children: [
+        { title: 'Template driven form', route: '/feedback', icon: 'format_list_bulleted' }
+      ],
+      isExpanded: false
+    },
+    {
+      title: 'Reactive form',
+      icon: 'dynamic_form',
+      route: '/form'
+    },
+    {
+      title: 'Calculator',
+      icon: 'calculate',
+      route: '/calculator'
+    },
+    {
+      title: 'Home',
+      icon: 'home',
+      route: '/'
+    },
+    {
+      title: 'Hello World',
+      icon: 'waving_hand',
+      route: '/hello'
+    },
+    {
+      title: 'Countries API',
+      icon: 'flag',
+      route: '/countries' // ← NEW ITEM ADDED HERE
+    }
+  ];
+
   toggleFeedback() {
     this.feedbackExpanded = !this.feedbackExpanded;
+  }
+
+  // Method to toggle any item with children
+  toggleItem(item: any) {
+    if (item.children) {
+      item.isExpanded = !item.isExpanded;
+    }
   }
 }

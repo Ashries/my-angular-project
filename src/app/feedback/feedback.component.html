@@ -1,42 +1,72 @@
 <div class="feedback-container">
-  <mat-card class="feedback-card">
-    <mat-card-header>
-      <mat-card-title>Palautenäkymä</mat-card-title>
-    </mat-card-header>
-
+  <h2>Palautenäkymä</h2>
+  
+  <mat-card class="instructions-card">
     <mat-card-content>
-      <mat-list>
-        <mat-list-item *ngFor="let question of questions; let i = index" class="question-item">
-          <div class="question-content">
-            <h3 class="question-text">{{ question.questionText }}</h3>
-            
-            <div class="slider-container">
-              <mat-slider
-                min="0"
-                [max]="question.feedbackTexts.length - 1"
-                step="1"
-                discrete
-                showTickMarks
-                [displayWith]="formatLabel">
-                <input matSliderThumb 
-                       [value]="getSliderValue(question)"
-                       (valueChange)="onSliderChange(question, $event)">
-              </mat-slider>
-            </div>
-
-            <div class="feedback-labels">
-              <span *ngFor="let text of question.feedbackTexts; let j = index" 
-                    class="feedback-label">
-                {{ text }}
-              </span>
-            </div>
-
-            <div class="current-feedback" *ngIf="question.currentFeedback">
-              Valittu: <strong>{{ question.currentFeedback }}</strong>
-            </div>
-          </div>
-        </mat-list-item>
-      </mat-list>
+      <p>Tervetuloa antamaan palautetta sovelluksestamme!</p>
+      <p>Vastaa alla oleviin kysymyksiin valitsemalla jokaisesta sopivin vaihtoehto.</p>
+      <p><strong>Huomio:</strong> *-merkillä merkityt kysymykset ovat pakollisia.</p>
     </mat-card-content>
   </mat-card>
+
+  <form (ngSubmit)="onSubmit()" *ngIf="!submitted">
+    <div *ngFor="let question of questions" class="question-card">
+      <mat-card>
+        <mat-card-content>
+          <h3 class="question-text">
+            {{ question.text }}
+            <span *ngIf="question.required" class="required-star">*</span>
+          </h3>
+          
+          <mat-radio-group 
+            [(ngModel)]="answers[question.id]" 
+            [name]="'question_' + question.id"
+            class="options-group">
+            
+            <div *ngFor="let option of question.options" class="option-item">
+              <mat-radio-button [value]="option" class="radio-button">
+                {{ option }}
+              </mat-radio-button>
+            </div>
+            
+          </mat-radio-group>
+          
+          <div *ngIf="question.required && !answers[question.id]" class="error-message">
+            Valitse vaihtoehto
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="!isFormValid()">
+        Lähetä palaute
+      </button>
+      <button mat-button type="button" (click)="onReset()">
+        Tyhjennä
+      </button>
+    </div>
+  </form>
+
+  <!-- Thank you message after submission -->
+  <div *ngIf="submitted" class="thank-you-card">
+    <mat-card>
+      <mat-card-content>
+        <h3>Kiitos palautteestasi!</h3>
+        <p>Vastaamisesi on tallennettu. Arvostamme aikaasi!</p>
+        
+        <div class="answers-summary">
+          <h4>Vastauksesi:</h4>
+          <div *ngFor="let question of questions" class="answer-item">
+            <strong>{{ question.id }}. {{ question.text }}:</strong>
+            <span>{{ getAnswerText(question.id) }}</span>
+          </div>
+        </div>
+        
+        <button mat-raised-button color="primary" (click)="onReset()" class="new-feedback-btn">
+          Anna uusi palaute
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>

@@ -11,7 +11,8 @@
       <mat-list-item (click)="toggleFeedback()" class="nav-item">
         <mat-icon matListItemIcon>feedback</mat-icon>
         <span matListItemTitle>Give Feedback</span>
-        <!-- REMOVED the arrow button -->
+        <mat-icon *ngIf="feedbackExpanded">expand_less</mat-icon>
+        <mat-icon *ngIf="!feedbackExpanded">expand_more</mat-icon>
       </mat-list-item>
 
       <!-- Template driven form submenu -->
@@ -43,6 +44,12 @@
       <mat-list-item routerLink="/hello" class="nav-item">
         <mat-icon matListItemIcon>waving_hand</mat-icon>
         <span matListItemTitle>Hello World</span>
+      </mat-list-item>
+
+      <!-- NEW: Countries API Item -->
+      <mat-list-item routerLink="/countries" class="nav-item">
+        <mat-icon matListItemIcon>flag</mat-icon>
+        <span matListItemTitle>Countries API</span>
       </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>

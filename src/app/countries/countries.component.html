@@ -1,0 +1,114 @@
+<div class="countries-container">
+  <h2>Maailman maat ja liput</h2>
+  
+  <!-- Status Info -->
+  <div class="status-info" *ngIf="!isLoading && !error">
+    <p><strong>Päivämäärä:</strong> {{ getFormattedDate() }}</p>
+    <p><strong>Data lähde:</strong> REST Countries API</p>
+    <p><strong>Löytyi:</strong> {{ filteredCountries.length }} maata</p>
+  </div>
+
+  <!-- Search and Filters -->
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <!-- Search -->
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Hae maita</mat-label>
+        <input 
+          matInput 
+          [(ngModel)]="searchTerm" 
+          (input)="onSearch()"
+          placeholder="Kirjoita maan nimi (esim. Suomi, Ruotsi)">
+      </mat-form-field>
+
+      <!-- Region Filter -->
+      <div class="filter-row">
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Alue</mat-label>
+          <mat-select [(value)]="selectedRegion" (selectionChange)="onRegionChange()">
+            <mat-option *ngFor="let region of regions" [value]="region">
+              {{ region }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Sort Filter -->
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Järjestä</mat-label>
+          <mat-select [(value)]="selectedSort" (selectionChange)="onSortChange()">
+            <mat-option *ngFor="let option of sortOptions" [value]="option">
+              {{ option }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button mat-raised-button color="primary" (click)="loadEuropeanCountries()" [disabled]="isLoading">
+          Näytä Euroopan maat
+        </button>
+        <button mat-raised-button color="accent" (click)="loadFinnishSpeakingCountries()" [disabled]="isLoading">
+          Suomenkieliset maat
+        </button>
+        <button mat-button (click)="resetFilters()" [disabled]="isLoading">
+          Tyhjennä suodattimet
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>Ladataan maita...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-state">
+    <mat-card>
+      <mat-card-content>
+        <p class="error-message">{{ error }}</p>
+        <button mat-raised-button color="warn" (click)="loadCountries()">
+          Yritä uudelleen
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Countries List -->
+  <div *ngIf="!isLoading && !error">
+    <!-- No Results -->
+    <div *ngIf="filteredCountries.length === 0" class="no-results">
+      <mat-card>
+        <mat-card-content>
+          <p>Ei maita löytynyt hakusanalla "{{ searchTerm }}". Kokeile toista hakusanaa.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Countries Grid -->
+    <div class="countries-grid" *ngIf="filteredCountries.length > 0">
+      <mat-card *ngFor="let country of filteredCountries" class="country-card">
+        <mat-card-header>
+          <img mat-card-avatar [src]="country.flags.png" [alt]="country.flags.alt || country.name.common" class="country-flag">
+          <mat-card-title>{{ country.name.common }}</mat-card-title>
+          <mat-card-subtitle>{{ country.name.official }}</mat-card-subtitle>
+        </mat-card-header>
+        
+        <img mat-card-image [src]="country.flags.png" [alt]="country.flags.alt || 'Flag of ' + country.name.common" class="flag-image">
+        
+        <mat-card-content>
+          <p><strong>📍 Pääkaupunki:</strong> {{ country.capital?.[0] || 'Ei pääkaupunkia' }}</p>
+          <p><strong>🌍 Alue:</strong> {{ country.region }} <span *ngIf="country.subregion">({{ country.subregion }})</span></p>
+          <p><strong>👥 Väkiluku:</strong> {{ formatPopulation(country.population) }}</p>
+          <p><strong>🗣️ Kielet:</strong> {{ getLanguages(country.languages) }}</p>
+          <p><strong>💰 Valuutat:</strong> {{ getCurrencies(country.currencies) }}</p>
+          <p><strong>📏 Pinta-ala:</strong> {{ formatArea(country.area) }}</p>
+          <p><strong>🏛️ Itsenäinen:</strong> {{ country.independent ? 'Kyllä' : 'Ei' }}</p>
+          <p><strong>🇺🇳 YK jäsen:</strong> {{ country.unMember ? 'Kyllä' : 'Ei' }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
