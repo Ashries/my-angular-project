@@ -1,62 +1,46 @@
+<div class="debug-info" style="background: #e3f2fd; padding: 15px; margin: 10px 0; border-radius: 5px;">
+  <h3 style="margin-top: 0; color: #1565c0;">📊 Debug Information</h3>
+  <p><strong>Status:</strong> {{ isLoading ? '🔄 Loading...' : '✅ Ready' }}</p>
+  <p><strong>Countries loaded:</strong> {{ countries.length }}</p>
+  <p><strong>Countries showing:</strong> {{ filteredCountries.length }}</p>
+  <p><strong>Search term:</strong> "{{ searchTerm }}"</p>
+  <button mat-button (click)="loadCountries()" style="margin-top: 5px;">🔄 Reload Data</button>
+</div>
+
 <div class="countries-container">
-  <h2>Maailman maat ja liput</h2>
+  <h1>🌍 Maailman maat ja liput</h1>
   
-  <!-- Status Info -->
-  <div class="status-info" *ngIf="!isLoading && !error">
-    <p><strong>Päivämäärä:</strong> {{ getFormattedDate() }}</p>
-    <p><strong>Data lähde:</strong> REST Countries API</p>
-    <p><strong>Löytyi:</strong> {{ filteredCountries.length }} maata</p>
+  <!-- Date Info -->
+  <div class="date-info">
+    <p><strong>📅 Päivämäärä:</strong> {{ getFormattedDate() }}</p>
+    <p><strong>📡 Data lähde:</strong> REST Countries API</p>
   </div>
 
-  <!-- Search and Filters -->
-  <mat-card class="filters-card">
-    <mat-card-content>
-      <!-- Search -->
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Hae maita</mat-label>
-        <input 
-          matInput 
-          [(ngModel)]="searchTerm" 
-          (input)="onSearch()"
-          placeholder="Kirjoita maan nimi (esim. Suomi, Ruotsi)">
-      </mat-form-field>
+  <!-- Search Box -->
+  <div class="search-section">
+    <mat-form-field appearance="outline" style="width: 100%;">
+      <mat-label>🔍 Hae maita</mat-label>
+      <input 
+        matInput 
+        [(ngModel)]="searchTerm" 
+        (input)="onSearch()"
+        placeholder="Kirjoita maan nimi (esim. Suomi, Ruotsi)">
+      <mat-hint>Aloita kirjoittamaan maan nimeä</mat-hint>
+    </mat-form-field>
+  </div>
 
-      <!-- Region Filter -->
-      <div class="filter-row">
-        <mat-form-field appearance="outline" class="filter-field">
-          <mat-label>Alue</mat-label>
-          <mat-select [(value)]="selectedRegion" (selectionChange)="onRegionChange()">
-            <mat-option *ngFor="let region of regions" [value]="region">
-              {{ region }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <!-- Sort Filter -->
-        <mat-form-field appearance="outline" class="filter-field">
-          <mat-label>Järjestä</mat-label>
-          <mat-select [(value)]="selectedSort" (selectionChange)="onSortChange()">
-            <mat-option *ngFor="let option of sortOptions" [value]="option">
-              {{ option }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="action-buttons">
-        <button mat-raised-button color="primary" (click)="loadEuropeanCountries()" [disabled]="isLoading">
-          Näytä Euroopan maat
-        </button>
-        <button mat-raised-button color="accent" (click)="loadFinnishSpeakingCountries()" [disabled]="isLoading">
-          Suomenkieliset maat
-        </button>
-        <button mat-button (click)="resetFilters()" [disabled]="isLoading">
-          Tyhjennä suodattimet
-        </button>
-      </div>
-    </mat-card-content>
-  </mat-card>
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button mat-raised-button color="primary" (click)="loadEuropeanCountries()" [disabled]="isLoading">
+      🇪🇺 Näytä Euroopan maat
+    </button>
+    <button mat-raised-button color="accent" (click)="loadFinnishSpeakingCountries()" [disabled]="isLoading">
+      🇫🇮 Suomenkieliset maat
+    </button>
+    <button mat-button (click)="resetFilters()">
+      🗑️ Tyhjennä hakusana
+    </button>
+  </div>
 
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-state">
@@ -66,49 +50,60 @@
 
   <!-- Error State -->
   <div *ngIf="error && !isLoading" class="error-state">
-    <mat-card>
-      <mat-card-content>
-        <p class="error-message">{{ error }}</p>
-        <button mat-raised-button color="warn" (click)="loadCountries()">
-          Yritä uudelleen
-        </button>
-      </mat-card-content>
-    </mat-card>
+    <div style="background: #ffebee; padding: 20px; border-radius: 5px; text-align: center;">
+      <h3 style="color: #c62828;">❌ Virhe</h3>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="warn" (click)="loadCountries()" style="margin-top: 10px;">
+        🔄 Yritä uudelleen
+      </button>
+    </div>
   </div>
 
-  <!-- Countries List -->
+  <!-- Countries Display -->
   <div *ngIf="!isLoading && !error">
+    
     <!-- No Results -->
     <div *ngIf="filteredCountries.length === 0" class="no-results">
-      <mat-card>
-        <mat-card-content>
-          <p>Ei maita löytynyt hakusanalla "{{ searchTerm }}". Kokeile toista hakusanaa.</p>
-        </mat-card-content>
-      </mat-card>
+      <div style="text-align: center; padding: 30px; background: #f5f5f5; border-radius: 5px;">
+        <p>😔 Ei maita löytynyt hakusanalla "{{ searchTerm }}"</p>
+        <p style="color: #666;">Kokeile hakusanoja: Suomi, Ruotsi, Saksa, Ranska</p>
+      </div>
     </div>
 
-    <!-- Countries Grid -->
-    <div class="countries-grid" *ngIf="filteredCountries.length > 0">
-      <mat-card *ngFor="let country of filteredCountries" class="country-card">
-        <mat-card-header>
-          <img mat-card-avatar [src]="country.flags.png" [alt]="country.flags.alt || country.name.common" class="country-flag">
-          <mat-card-title>{{ country.name.common }}</mat-card-title>
-          <mat-card-subtitle>{{ country.name.official }}</mat-card-subtitle>
-        </mat-card-header>
-        
-        <img mat-card-image [src]="country.flags.png" [alt]="country.flags.alt || 'Flag of ' + country.name.common" class="flag-image">
-        
-        <mat-card-content>
-          <p><strong>📍 Pääkaupunki:</strong> {{ country.capital?.[0] || 'Ei pääkaupunkia' }}</p>
-          <p><strong>🌍 Alue:</strong> {{ country.region }} <span *ngIf="country.subregion">({{ country.subregion }})</span></p>
-          <p><strong>👥 Väkiluku:</strong> {{ formatPopulation(country.population) }}</p>
-          <p><strong>🗣️ Kielet:</strong> {{ getLanguages(country.languages) }}</p>
-          <p><strong>💰 Valuutat:</strong> {{ getCurrencies(country.currencies) }}</p>
-          <p><strong>📏 Pinta-ala:</strong> {{ formatArea(country.area) }}</p>
-          <p><strong>🏛️ Itsenäinen:</strong> {{ country.independent ? 'Kyllä' : 'Ei' }}</p>
-          <p><strong>🇺🇳 YK jäsen:</strong> {{ country.unMember ? 'Kyllä' : 'Ei' }}</p>
-        </mat-card-content>
-      </mat-card>
+    <!-- Countries List -->
+    <div *ngIf="filteredCountries.length > 0">
+      <h3>📋 Löytyi {{ filteredCountries.length }} maata:</h3>
+      
+      <div class="countries-grid">
+        <mat-card *ngFor="let country of filteredCountries" class="country-card">
+          <!-- Flag -->
+          <div class="card-header" *ngIf="country.flags?.png">
+            <img [src]="country.flags.png" 
+                 [alt]="country.flags.alt || country.name.common + ' lippu'"
+                 class="country-flag-large">
+          </div>
+          
+          <mat-card-header>
+            <mat-card-title>{{ country.name.common }}</mat-card-title>
+            <mat-card-subtitle>{{ country.name.official }}</mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="country-details">
+              <p><strong>📍 Pääkaupunki:</strong> {{ getCapital(country.capital) }}</p>
+              <p><strong>🌍 Alue:</strong> {{ country.region }}</p>
+              <p><strong>👥 Väkiluku:</strong> {{ formatPopulation(country.population) }}</p>
+              <p><strong>🗣️ Kielet:</strong> {{ getLanguages(country.languages) }}</p>
+              <p><strong>💰 Valuutta:</strong> {{ country.currencies ? 'Yes' : 'N/A' }}</p>
+              <p><strong>🇺🇳 YK jäsen:</strong> {{ country.unMember ? 'Kyllä' : 'Ei' }}</p>
+            </div>
+          </mat-card-content>
+          
+          <mat-card-actions>
+            <button mat-button color="primary">Lisätiedot</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
     </div>
   </div>
 </div>
