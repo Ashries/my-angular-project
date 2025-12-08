@@ -1,12 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CountriesService } from '../services/countries.service';
 
+// INLINE PIPE - Add this inside the same file
+@Pipe({
+  name: 'countryFilter',
+  standalone: true
+})
+export class CountryFilterPipe implements PipeTransform {
+  transform(countries: any[], search: string): any[] {
+    if (!countries || !search || search.trim() === '') {
+      return countries;
+    }
+    
+    const searchLower = search.toLowerCase().trim();
+    
+    return countries.filter(country => {
+      return country.name.common.toLowerCase().includes(searchLower);
+    });
+  }
+}
+
 @Component({
   selector: 'app-countries',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule, 
+    FormsModule,
+    CountryFilterPipe  // Now this works because it's in the same file
+  ],
   template: `
     <div style="padding: 20px;">
       <h1 style="color: #3f51b5;">🌍 Maat API-testi</h1>
@@ -17,17 +40,19 @@ import { CountriesService } from '../services/countries.service';
         <p><strong>Ladataanko:</strong> {{ isLoading ? 'KYLLÄ' : 'EI' }}</p>
         <p><strong>Virhe:</strong> {{ error || 'Ei virheitä' }}</p>
         <p><strong>Maat ladattu:</strong> {{ countries.length }}</p>
-        <p><strong>Näytetään:</strong> {{ filteredCountries.length }}</p>
+        <p><strong>Näytetään:</strong> {{ (countries | countryFilter:searchTerm).length }}</p>
       </div>
 
       <!-- Search -->
       <div style="margin: 20px 0;">
         <input 
           type="text" 
-          [(ngModel)]="searchTerm" 
-          (input)="onSearch()"
+          [(ngModel)]="searchTerm"
           placeholder="Hae maita..."
           style="width: 100%; padding: 10px; font-size: 16px; border: 2px solid #3f51b5; border-radius: 5px;">
+        <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">
+          Hae maan nimellä (esim. Suomi, Ruotsi)
+        </p>
       </div>
 
       <!-- Buttons -->
@@ -66,13 +91,14 @@ import { CountriesService } from '../services/countries.service';
 
       <!-- Countries List -->
       <div *ngIf="!isLoading && !error">
-        <h3>Löytyi {{ filteredCountries.length }} maata:</h3>
+        <h3>Löytyi {{ (countries | countryFilter:searchTerm).length }} maata:</h3>
         
-        <div *ngIf="filteredCountries.length === 0" style="text-align: center; padding: 40px;">
-          <p>Ei maita löytynyt</p>
+        <div *ngIf="(countries | countryFilter:searchTerm).length === 0" style="text-align: center; padding: 40px;">
+          <p>Ei maita löytynyt hakusanalla "{{ searchTerm }}"</p>
         </div>
 
-        <div *ngFor="let country of filteredCountries" style="margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+        <!-- Using the pipe for filtering -->
+        <div *ngFor="let country of countries | countryFilter:searchTerm" style="margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
           
           <!-- Flag -->
           <div *ngIf="country.flags?.png" style="text-align: center; margin-bottom: 15px;">
@@ -87,10 +113,6 @@ import { CountriesService } from '../services/countries.service';
           <p><strong>Alue:</strong> {{ country.region }}</p>
           <p><strong>Väkiluku:</strong> {{ formatPopulation(country.population) }}</p>
           <p><strong>Kielet:</strong> {{ getLanguages(country.languages) }}</p>
-          
-          <div style="margin-top: 10px; color: #666; font-size: 0.9em;">
-            ID: {{ country.name.common.toLowerCase().replace(' ', '-') }}
-          </div>
         </div>
       </div>
     </div>
@@ -98,72 +120,40 @@ import { CountriesService } from '../services/countries.service';
 })
 export class CountriesComponent implements OnInit {
   countries: any[] = [];
-  filteredCountries: any[] = [];
   isLoading = true;
   error = '';
   searchTerm = '';
 
-  constructor(private countriesService: CountriesService) {
-    console.log('✅ Component created');
-  }
+  constructor(private countriesService: CountriesService) {}
 
   ngOnInit(): void {
-    console.log('✅ ngOnInit called');
     this.loadCountries();
   }
 
   loadCountries(): void {
-    console.log('🔄 Loading countries...');
     this.isLoading = true;
     this.error = '';
     
     this.countriesService.getAllCountries().subscribe({
       next: (data) => {
-        console.log('✅ Data received:', data?.length, 'countries');
-        console.log('📊 Sample country:', data[0]);
-        
-        if (data && Array.isArray(data)) {
-          this.countries = data;
-          this.filteredCountries = [...data];
-          console.log('✅ Countries set:', this.countries.length);
-        } else {
-          console.error('❌ Data is not an array:', data);
-          this.error = 'Invalid data received';
-        }
+        this.countries = data;
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('❌ Error loading countries:', err);
-        this.error = `Virhe: ${err.status || 'Unknown'} - ${err.message || 'API error'}`;
+        this.error = 'Virhe maiden latauksessa';
         this.isLoading = false;
       }
     });
   }
 
-  onSearch(): void {
-    if (!this.searchTerm.trim()) {
-      this.filteredCountries = [...this.countries];
-      return;
-    }
-
-    const term = this.searchTerm.toLowerCase();
-    this.filteredCountries = this.countries.filter(country => 
-      country.name.common.toLowerCase().includes(term)
-    );
-  }
-
   loadEuropeanCountries(): void {
-    console.log('🌍 Loading European countries...');
     this.isLoading = true;
     this.countriesService.getEuropeanCountries().subscribe({
       next: (data) => {
-        console.log('✅ European countries loaded:', data?.length);
         this.countries = data;
-        this.filteredCountries = [...data];
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('❌ Error loading European countries:', err);
         this.error = 'Virhe Euroopan maiden latauksessa';
         this.isLoading = false;
       }
@@ -171,17 +161,13 @@ export class CountriesComponent implements OnInit {
   }
 
   loadFinnishSpeakingCountries(): void {
-    console.log('🇫🇮 Loading Finnish-speaking countries...');
     this.isLoading = true;
     this.countriesService.getFinnishSpeakingCountries().subscribe({
       next: (data) => {
-        console.log('✅ Finnish-speaking countries loaded:', data?.length);
         this.countries = data;
-        this.filteredCountries = [...data];
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('❌ Error loading Finnish-speaking countries:', err);
         this.error = 'Virhe suomenkielisten maiden latauksessa';
         this.isLoading = false;
       }
@@ -190,7 +176,6 @@ export class CountriesComponent implements OnInit {
 
   resetFilters(): void {
     this.searchTerm = '';
-    this.filteredCountries = [...this.countries];
   }
 
   formatPopulation(population: number): string {
